@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.faceye</groupId>
+	<artifactId>faceye-data</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>faceye-data</name>
+	<packaging>jar</packaging>
+	<properties>
+		<hadoop.version>2.8.0</hadoop.version>
+		<mysql.version>6.0.6</mysql.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-common</artifactId>
+			<version>${hadoop.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-client</artifactId>
+			<version>${hadoop.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-hdfs</artifactId>
+			<version>${hadoop.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-mapreduce-client-common</artifactId>
+			<version>${hadoop.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-client</artifactId>
+			<version>${hadoop.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.version}</version>
+		</dependency>
+
+	</dependencies>
+
+	<!-- Package as an executable jar -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<!-- not append assembly id in release file name -->
+					<appendAssemblyId>false</appendAssemblyId>
+					<!-- <descriptors> <descriptor> src/main/assemble/package.xml </descriptor> </descriptors> -->
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-jar</id><!-- 随便一个名字 -->
+						<phase>package</phase><!-- 绑定到package生命周期阶段上 -->
+						<goals>
+							<goal>single</goal><!-- 只运行一次 -->
+						</goals>
+						<configuration>
+							<skipAssembly>false</skipAssembly><!-- 跳过这个执行器 -->
+							<!-- 自定义输出目录（finalName为最终项目构建名称） -->
+							<!-- <outputDirectory> ${project.build.directory}/${project.build.finalName}/WEB-INF/lib </outputDirectory> -->
+							<!-- 描述符文件 -->
+							<!-- <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> </descriptorRefs> -->
+							<descriptors>
+								<descriptor>src/main/resources/assembly/jar.xml</descriptor>
+							</descriptors>
+							<archive>
+								<manifest>
+									<mainClass>com.faceye.component.data.Runner</mainClass>
+									<!-- <mainClass>com.faceye.component.hadoop.service.stock.mapreduce.InitStockRunner</mainClass> -->
+									<!-- <mainClass>com.faceye.component.hadoop.service.mapreduce.example.ExampleRunner</mainClass> -->
+									<!-- <mainClass>com.faceye.component.hadoop.service.mapreduce.example.WordCount</mainClass> -->
+								</manifest>
+							</archive>
+						</configuration>
+					</execution>
+					<!-- <execution> <id>make-zip</id> <phase>package</phase> <goals> <goal>single</goal> </goals> <configuration> <skipAssembly>true</skipAssembly> 
+						<descriptors> <descriptor>src/main/assembly/zip.xml</descriptor> </descriptors> </configuration> </execution> -->
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<!-- Add Spring repositories -->
+	<!-- (you don't need this if you are using a .RELEASE version) -->
+	<repositories>
+
+	</repositories>
+	<pluginRepositories>
+
+	</pluginRepositories>
+</project>
