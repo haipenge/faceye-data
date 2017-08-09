@@ -8,8 +8,10 @@
 	<name>faceye-data</name>
 	<packaging>jar</packaging>
 	<properties>
-		<hadoop.version>2.8.0</hadoop.version>
+		<hadoop.version>2.7.3</hadoop.version>
 		<mysql.version>6.0.6</mysql.version>
+		<mongo-java-driver.version>3.4.2</mongo-java-driver.version>
+		<mongo-hadoop-core.version>1.5.1</mongo-hadoop-core.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -42,7 +44,16 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>${mongo-java-driver.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb.mongo-hadoop</groupId>
+			<artifactId>mongo-hadoop-core</artifactId>
+			<version>${mongo-hadoop-core.version}</version>
+		</dependency>
 	</dependencies>
 
 	<!-- Package as an executable jar -->
