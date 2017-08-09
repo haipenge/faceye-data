@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * HBase操作客户端
+ * HBase瀹㈡埛绔搷浣滅被
  * 
  * @author songhaipeng
  *
@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 public class HBaseClient {
 	private Logger logger = LoggerFactory.getLogger(HBaseClient.class);
 	private static Configuration conf = null;
-	private static final String HBASE_ZK_QUORUM = "127.0.0.1";
+	private static final String HBASE_ZK_QUORUM = "localhost";
 
 	private static class HBaseClientHolder {
 		private static HBaseClient INSTANCE = new HBaseClient();

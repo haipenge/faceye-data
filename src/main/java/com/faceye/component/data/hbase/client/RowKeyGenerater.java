@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @KEY:RowKeyÉú³ÉÆ÷ Ê±¼ä(14)+·şÎñ±êÊ¶(3)+×ÔÔö(7)
+ * @KEY:RowKey,å¹´æœˆæ—¥æ—¶åˆ†ç§’+æœåŠ¡å™¨æ ‡è¯†(3)+åºåˆ—(7)ä½
  * @Exam: yyyyMMddHHmmss0011000000
  * @author songhaipeng
  *
@@ -17,7 +17,7 @@ public class RowKeyGenerater {
 
 	private Logger logger = LoggerFactory.getLogger(RowKeyGenerater.class);
 	private SimpleDateFormat sdf = null;
-	// ·şÎñ±êÊ¶£¬ÓÃÓÚÇø·Ö²»Í¬·şÎñÆ÷ÉúµÄID
+	// æœåŠ¡å™¨æ ‡è¯†ç¬¦å·
 	private static Integer SERVICE_SIGN = 001;
 	private AtomicInteger COUNTER = null;
 	private static Integer MAX_COUNTER = 9999999;
@@ -36,19 +36,17 @@ public class RowKeyGenerater {
 		return RowKeyGeneraterHolder.INSTANCE;
 	}
 
-	public synchronized Long get() {
-		Long res = null;
+	public synchronized String get() {
 		StringBuilder sb = new StringBuilder();
 		String timeSign = getTimestampSign();
 		sb.append(timeSign);
 		sb.append(SERVICE_SIGN);
 		sb.append(getCounter());
-		res = Long.parseLong(sb.toString());
-		return res;
+		return sb.toString();
 	}
 
 	/**
-	 * »ñÈ¡¼ÆÊıÆ÷
+	 * è®¡æ•°å™¨
 	 * 
 	 * @return
 	 */

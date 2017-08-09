@@ -25,15 +25,13 @@ import com.faceye.component.data.hbase.client.RowKeyGenerater;
 
 public class StockStorage {
 	private Logger logger = LoggerFactory.getLogger(StockStorage.class);
-	private static String TABLE_NAME = "stock";
-
-	public void createStockTable() {
+	
+	public void createStockTable(String table,String [] familyColumns) {
 		HBaseAdmin admin = null;
 		try {
-			TableName tableName = TableName.valueOf(TABLE_NAME);
+			TableName tableName = TableName.valueOf(table);
 			HTableDescriptor htableDesc = new HTableDescriptor(tableName);
-			String[] families = new String[] { "data" };
-			for (String family : families) {
+			for (String family : familyColumns) {
 				htableDesc.addFamily(new HColumnDescriptor(family));
 			}
 			admin = new HBaseAdmin(HBaseClient.getInstance().getConf());
@@ -57,10 +55,10 @@ public class StockStorage {
 		}
 	}
 
-	public void put(String columns[], String values[]) {
+	public void put(String tableName,String columns[], String values[]) {
 		HTable table = null;
 		try {
-			table = new HTable(HBaseClient.getInstance().getConf(), Bytes.toBytes(TABLE_NAME));
+			table = new HTable(HBaseClient.getInstance().getConf(), Bytes.toBytes(tableName));
 			Put put = this.buildPut(table, columns, values);
 			if (put != null) {
 				table.put(put);
@@ -76,18 +74,18 @@ public class StockStorage {
 		}
 	}
 
-	public void batchPut(List<String[]> columnItems, List<String[]> valueItems) {
+	public void batchPut(String tableName,List<String[]> columnItems, List<String[]> valueItems) {
 		HTable table = null;
 		List<Put> puts = new ArrayList<Put>(0);
 		try {
-			table = new HTable(HBaseClient.getInstance().getConf(), Bytes.toBytes(TABLE_NAME));
+			table = new HTable(HBaseClient.getInstance().getConf(), Bytes.toBytes(tableName));
 			if (columnItems != null && valueItems != null && columnItems.size() == valueItems.size()) {
 				int length = columnItems.size();
 				for (int i = 0; i < length; i++) {
 					String[] columns = columnItems.get(i);
 					String[] values = valueItems.get(i);
-					Put put=this.buildPut(table, columns, values);
-					if(put!=null){
+					Put put = this.buildPut(table, columns, values);
+					if (put != null) {
 						puts.add(put);
 					}
 				}
@@ -111,7 +109,7 @@ public class StockStorage {
 			if (columns != null && values != null && columns.length == values.length) {
 				columnFamilies = table.getTableDescriptor().getColumnFamilies();
 				int columnLength = columns.length;
-				// 设置RowKey
+				// RowKey
 				put = new Put(Bytes.toBytes(RowKeyGenerater.getInstance().get().toString()));
 				for (HColumnDescriptor columnDescriptor : columnFamilies) {
 					String columnFamily = columnDescriptor.getNameAsString();
@@ -119,17 +117,16 @@ public class StockStorage {
 						for (int i = 0; i < columnLength; i++) {
 							String column = columns[i];
 							String value = values[i];
-							Cell cell = new KeyValue(Bytes.toBytes(columnFamily), Bytes.toBytes(column),
-									Bytes.toBytes(value));
-							put.add(cell);
+//							Cell cell = new KeyValue(Bytes.toBytes(columnFamily), Bytes.toBytes(column), Bytes.toBytes(value));
+//							put.add(cell);
+							put.add(Bytes.toBytes(columnFamily), Bytes.toBytes(column), Bytes.toBytes(value));
 						}
 					}
 				}
 			}
 		} catch (IOException e) {
 			logger.error(">>Exception:" + e);
-		} // 获取所有的列族
-
+		}
 		return put;
 	}
 
