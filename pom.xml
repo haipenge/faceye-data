@@ -12,6 +12,7 @@
 		<mysql.version>6.0.6</mysql.version>
 		<mongo-java-driver.version>3.4.2</mongo-java-driver.version>
 		<mongo-hadoop-core.version>1.5.1</mongo-hadoop-core.version>
+		<hbase-client.version>1.2.6</hbase-client.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -49,6 +50,11 @@
 			<artifactId>mongo-hadoop-core</artifactId>
 			<version>${mongo-hadoop-core.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.hbase</groupId>
+			<artifactId>hbase-client</artifactId>
+			<version>${hbase-client.version}</version>
+		</dependency>
 	</dependencies>
 
 	<!-- Package as an executable jar -->
@@ -61,7 +67,8 @@
 				<configuration>
 					<!-- not append assembly id in release file name -->
 					<appendAssemblyId>false</appendAssemblyId>
-					<!-- <descriptors> <descriptor> src/main/assemble/package.xml </descriptor> </descriptors> -->
+					<!-- <descriptors> <descriptor> src/main/assemble/package.xml </descriptor> 
+						</descriptors> -->
 				</configuration>
 				<executions>
 					<execution>
@@ -73,9 +80,11 @@
 						<configuration>
 							<skipAssembly>false</skipAssembly><!-- 跳过这个执行器 -->
 							<!-- 自定义输出目录（finalName为最终项目构建名称） -->
-							<!-- <outputDirectory> ${project.build.directory}/${project.build.finalName}/WEB-INF/lib </outputDirectory> -->
+							<!-- <outputDirectory> ${project.build.directory}/${project.build.finalName}/WEB-INF/lib 
+								</outputDirectory> -->
 							<!-- 描述符文件 -->
-							<!-- <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> </descriptorRefs> -->
+							<!-- <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> 
+								</descriptorRefs> -->
 							<descriptors>
 								<descriptor>src/main/resources/assembly/jar.xml</descriptor>
 							</descriptors>
@@ -89,8 +98,10 @@
 							</archive>
 						</configuration>
 					</execution>
-					<!-- <execution> <id>make-zip</id> <phase>package</phase> <goals> <goal>single</goal> </goals> <configuration> <skipAssembly>true</skipAssembly> 
-						<descriptors> <descriptor>src/main/assembly/zip.xml</descriptor> </descriptors> </configuration> </execution> -->
+					<!-- <execution> <id>make-zip</id> <phase>package</phase> <goals> <goal>single</goal> 
+						</goals> <configuration> <skipAssembly>true</skipAssembly> <descriptors> 
+						<descriptor>src/main/assembly/zip.xml</descriptor> </descriptors> </configuration> 
+						</execution> -->
 				</executions>
 			</plugin>
 		</plugins>
