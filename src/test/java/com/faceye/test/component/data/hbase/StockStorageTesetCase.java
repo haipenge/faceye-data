@@ -28,7 +28,7 @@ public class StockStorageTesetCase {
 	@Test
 	public void testCreateTable() throws Exception{
 		StockStorage storage=new StockStorage();
-		storage.createStockTable("stock",new String[]{"data"});
+		storage.create("stock",new String[]{"data"});
 		HBaseAdmin admin=new HBaseAdmin(HBaseClient.getInstance().getConf());
 		TableName tableName = TableName.valueOf("stock");
 		HTableDescriptor htableDesc = new HTableDescriptor(tableName);

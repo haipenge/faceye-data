@@ -7,6 +7,9 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.MasterNotRunningException;
 import org.apache.hadoop.hbase.ZooKeeperConnectionException;
+import org.apache.hadoop.hbase.client.Admin;
+import org.apache.hadoop.hbase.client.Connection;
+import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +32,7 @@ public class HBaseClient {
 	private HBaseClient() {
 		conf = HBaseConfiguration.create();
 		conf.set("hbase.zookeeper.quorum", HBASE_ZK_QUORUM);
+
 	}
 
 	public static HBaseClient getInstance() {
@@ -37,6 +41,20 @@ public class HBaseClient {
 
 	public Configuration getConf() {
 		return conf;
+	}
+
+	public Connection getConnection() throws IOException {
+		Connection conn = null;
+		conn = ConnectionFactory.createConnection(conf);
+
+		return conn;
+	}
+
+	public Admin getAdmin() throws IOException {
+		Connection conn = getConnection();
+		Admin admin = null;
+		admin = conn.getAdmin();
+		return admin;
 	}
 
 	public void create(HTableDescriptor htableDesc) {
