@@ -40,18 +40,18 @@ import com.faceye.component.data.hbase.storage.StockStorage;
  * @author songhaipeng
  *
  */
-public class RepositorySupport {
-	private Logger logger = LoggerFactory.getLogger(StockStorage.class);
+public class HBaseRepository {
+	private Logger logger = LoggerFactory.getLogger(HBaseRepository.class);
 
-	private RepositorySupport() {
+	private HBaseRepository() {
 
 	}
 
 	private static class RepositorySupportHolder {
-		private final static RepositorySupport INSTANCE = new RepositorySupport();
+		private final static HBaseRepository INSTANCE = new HBaseRepository();
 	}
 
-	public static RepositorySupport getInstance() {
+	public static HBaseRepository getInstance() {
 		return RepositorySupportHolder.INSTANCE;
 	}
 /**
@@ -59,7 +59,7 @@ public class RepositorySupport {
  * @param table
  * @param families
  */
-	public void create(String table, String[] families) {
+	public void create(String table, String... families) {
 		Admin admin = null;
 		try {
 			TableName tableName = TableName.valueOf(table);

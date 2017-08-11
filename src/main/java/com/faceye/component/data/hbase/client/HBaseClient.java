@@ -11,6 +11,7 @@ import org.apache.hadoop.hbase.client.Admin;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
+import org.apache.hadoop.hbase.client.HConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +47,7 @@ public class HBaseClient {
 	public Connection getConnection() throws IOException {
 		Connection conn = null;
 		conn = ConnectionFactory.createConnection(conf);
-
+//		Connection conn=ConnectionManager.getConnection();
 		return conn;
 	}
 
