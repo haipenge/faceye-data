@@ -32,11 +32,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.faceye.component.data.hbase.storage.StockStorage;
+
 /**
- * HBase操作支持
- * 插入
- * 删除
- * 查询
+ * HBase操作支持 插入 删除 查询
+ * 
  * @author songhaipeng
  *
  */
@@ -54,11 +53,13 @@ public class HBaseRepository {
 	public static HBaseRepository getInstance() {
 		return RepositorySupportHolder.INSTANCE;
 	}
-/**
- * 创建表
- * @param table
- * @param families
- */
+
+	/**
+	 * 创建表
+	 * 
+	 * @param table
+	 * @param families
+	 */
 	public void create(String table, String... families) {
 		Admin admin = null;
 		try {
@@ -90,16 +91,17 @@ public class HBaseRepository {
 
 	/**
 	 * 在指定列族上写数据
+	 * 
 	 * @param tableName
 	 * @param family
 	 * @param columns
 	 * @param values
 	 */
 	public void put(String tableName, String family, String columns[], String values[]) {
-		HTable table = null;
+		Table table = null;
 		try {
-			table = new HTable(HBaseClient.getInstance().getConf(), Bytes.toBytes(tableName));
-			Put put = this.buildPut(table, family,RowKeyGenerater.getInstance().get(), columns, values);
+			table = HBaseClient.getInstance().getConnection().getTable(TableName.valueOf(tableName));
+			Put put = this.buildPut(table, family, RowKeyGenerater.getInstance().get(), columns, values);
 			if (put != null) {
 				table.put(put);
 			}
@@ -113,65 +115,69 @@ public class HBaseRepository {
 			}
 		}
 	}
+
 	/**
 	 * 在多个列族上同时写数据
+	 * 
 	 * @param table
 	 * @param families
 	 * @param columns
 	 * @param values
 	 */
-	public void put(String table,String [] families,List<String[]> columns,List<String[]>values){
-		if(families!=null && columns!=null && values!=null&&families.length==columns.size()&&columns.size()==values.size()){
-			Table tab=null;
-			List<Put> puts=new ArrayList<Put>(0);
+	public void put(String table, String[] families, List<String[]> columns, List<String[]> values) {
+		if (families != null && columns != null && values != null && families.length == columns.size()
+				&& columns.size() == values.size()) {
+			Table tab = null;
+			List<Put> puts = new ArrayList<Put>(0);
 			try {
-				tab = new HTable(HBaseClient.getInstance().getConf(), Bytes.toBytes(table));
-				String rowKey=RowKeyGenerater.getInstance().get();
-				for(int i=0;i<families.length;i++){
-					String family =families[i];
-					String[] column=columns.get(i);
-					String [] value=values.get(i);
-					Put put = this.buildPut(tab,rowKey, family, column, value);
+				tab = HBaseClient.getInstance().getConnection().getTable(TableName.valueOf(table));
+				String rowKey = RowKeyGenerater.getInstance().get();
+				for (int i = 0; i < families.length; i++) {
+					String family = families[i];
+					String[] column = columns.get(i);
+					String[] value = values.get(i);
+					Put put = this.buildPut(tab, rowKey, family, column, value);
 					if (put != null) {
 						puts.add(put);
 					}
 				}
-				if(CollectionUtils.isNotEmpty(puts)){
+				if (CollectionUtils.isNotEmpty(puts)) {
 					tab.put(puts);
 				}
 			} catch (IOException e) {
-				logger.error(">>Exception:"+e);
-			}finally{
+				logger.error(">>Exception:" + e);
+			} finally {
 				try {
 					tab.close();
 				} catch (IOException e) {
-					logger.error(">>Exception:"+e);
+					logger.error(">>Exception:" + e);
 				}
 			}
-		}else{
+		} else {
 			logger.error(">>Family size not equal with columns size or values size.");
 		}
 	}
 
 	/**
 	 * 在指定列族上批量写数据
+	 * 
 	 * @param tableName
 	 * @param family
 	 * @param columnItems
 	 * @param valueItems
 	 */
 	public void batchPut(String tableName, String family, List<String[]> columnItems, List<String[]> valueItems) {
-		HTable table = null;
+		Table table = null;
 		List<Put> puts = new ArrayList<Put>(0);
 		try {
-			table = new HTable(HBaseClient.getInstance().getConf(), Bytes.toBytes(tableName));
+			table = HBaseClient.getInstance().getConnection().getTable(TableName.valueOf(tableName));
 			if (columnItems != null && valueItems != null && columnItems.size() == valueItems.size()) {
 				int length = columnItems.size();
 				for (int i = 0; i < length; i++) {
 					String[] columns = columnItems.get(i);
 					String[] values = valueItems.get(i);
-					String rowKey=RowKeyGenerater.getInstance().get();
-					Put put = this.buildPut(table,rowKey, family, columns, values);
+					String rowKey = RowKeyGenerater.getInstance().get();
+					Put put = this.buildPut(table, rowKey, family, columns, values);
 					if (put != null) {
 						puts.add(put);
 					}
@@ -189,9 +195,7 @@ public class HBaseRepository {
 		}
 	}
 
-	
-	
-	private Put buildPut(Table table,String rowKey, String family, String columns[], String values[]) {
+	private Put buildPut(Table table, String rowKey, String family, String columns[], String values[]) {
 		HColumnDescriptor[] columnFamilies;
 		Put put = null;
 		try {
@@ -417,6 +421,7 @@ public class HBaseRepository {
 
 	/**
 	 * 包装某一RowKey数据
+	 * 
 	 * @param rs
 	 * @return
 	 */
