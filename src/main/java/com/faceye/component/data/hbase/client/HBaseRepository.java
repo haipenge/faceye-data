@@ -258,7 +258,7 @@ public class HBaseRepository {
 	 * @param familyColumn
 	 * @param qualifier
 	 */
-	public void remove(String table, String rowKey, String family, String qualifier) {
+	public void delete(String table, String rowKey, String family, String qualifier) {
 		TableName tableName = TableName.valueOf(table);
 		Table tab = null;
 		try {

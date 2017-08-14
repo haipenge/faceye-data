@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 public class Family implements Serializable {
 
 	/**
@@ -29,6 +31,17 @@ public class Family implements Serializable {
 
 	public void setColumns(List<Col> columns) {
 		this.columns = columns;
+	}
+
+	public Col getCol(String key) {
+		Col col = null;
+		for (Col c : columns) {
+			if (StringUtils.equals(c.getKey(), key)) {
+				col = c;
+				break;
+			}
+		}
+		return col;
 	}
 
 }

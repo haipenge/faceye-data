@@ -19,6 +19,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.faceye.component.data.hbase.parse.AnnotationParse;
 import com.faceye.component.data.hbase.wrapper.Row;
 import com.faceye.component.data.hbase.wrapper.TableReader;
 import com.faceye.component.data.hbase.wrapper.WTable;
@@ -39,7 +40,27 @@ public class HBaseSupport {
 	 * 
 	 * @param wtable
 	 */
-	public void put(WTable wtable) {
+	public <T> void put(T entity) {
+		WTable wtable = AnnotationParse.entity2WTable(entity);
+		this.put(wtable);
+	}
+
+	/**
+	 * 批量保存
+	 * 
+	 * @param entities
+	 */
+	public <T> void puts(Iterable<T> entities) {
+		WTable wtable = AnnotationParse.entities2WTable(entities);
+		this.put(wtable);
+	}
+
+	/**
+	 * 保存WTable数据
+	 * 
+	 * @param wtable
+	 */
+	private void put(WTable wtable) {
 		this.createTableIfTableNotExist(wtable);
 		List<Put> puts = TableReader.rows2Puts(wtable.getRows());
 		Table table = null;
@@ -58,19 +79,46 @@ public class HBaseSupport {
 	}
 
 	/**
-	 * 获取一行数据, 包含所有列族
+	 * 删除一行数据
+	 * @param entity
+	 */
+	public <T> void delete(T entity) {
+		if (entity != null) {
+			String table = AnnotationParse.getTable(entity.getClass());
+			String rowKey=AnnotationParse.getRowKey(entity);
+			//@,todo,按family,qualifier删除 
+			HBaseRepository.getInstance().delete(table, rowKey, "", "");
+		}
+	}
+
+	/**
+	 * 取得一行记录
 	 * 
-	 * @param table
+	 * @param clazz
 	 * @param rowKey
 	 * @return
-	 * @Desc:
-	 * @Author:haipenge
-	 * @Date:2017年8月12日 下午4:27:18
 	 */
-	public Row getRow(String table, String rowKey) {
-		Row row = null;
-		row = this.getRow(table, rowKey, "");
-		return row;
+	public <T> T get(Class clazz, String rowKey) {
+		return get(clazz, rowKey, "");
+	}
+
+	public <T> T get(Class clazz, String rowKey, String family) {
+		T entity = null;
+		if (clazz != null) {
+			String table = AnnotationParse.getTable(clazz);
+			Row row = null;
+			row = getRow(table, rowKey, family);
+			entity = AnnotationParse.row2Entity(row, clazz);
+		}
+		return entity;
+	}
+
+	public <T> Iterable<T> getPage(Class clazz, FilterList filterList, Integer start, Integer size) {
+		Iterable<T> entities = null;
+		String table = AnnotationParse.getTable(clazz);
+		List<Row> rows = getRows(table, filterList, start, size);
+		entities = AnnotationParse.rows2Entities(rows, clazz);
+		return entities;
 	}
 
 	/**
@@ -84,7 +132,7 @@ public class HBaseSupport {
 	 * @Author:haipenge
 	 * @Date:2017年8月12日 下午4:37:30
 	 */
-	public Row getRow(String table, String rowKey, String family) {
+	private Row getRow(String table, String rowKey, String family) {
 		Row row = null;
 		Table tab = null;
 		try {
@@ -127,7 +175,7 @@ public class HBaseSupport {
 	 * @Author:haipenge
 	 * @Date:2017年8月12日 下午4:40:37
 	 */
-	public List<Row> getRows(String table, FilterList filterList, Integer start, Integer size) {
+	private List<Row> getRows(String table, FilterList filterList, Integer start, Integer size) {
 		List<Row> rows = new ArrayList<Row>(0);
 		Table tab = null;
 		try {

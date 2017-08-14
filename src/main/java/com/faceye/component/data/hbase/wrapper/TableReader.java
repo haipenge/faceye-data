@@ -38,10 +38,14 @@ public class TableReader {
 		return set.toArray(new String[set.size()]);
 	}
 
+	/**
+	 * 将行结构，转化为将要进行存储的结构 put
+	 * @param row
+	 * @return
+	 */
 	public static Put row2Put(Row row) {
 		Put put = null;
 		put = new Put(Bytes.toBytes(row.getRowkey()));
-		String rowKey = row.getRowkey();
 		List<Family> families = row.getFamilies();
 		for (Family family : families) {
 			List<Col> columns = family.getColumns();
@@ -63,6 +67,11 @@ public class TableReader {
 		return puts;
 	}
 
+	/**
+	 * 将result 结构转化为行结构
+	 * @param rs
+	 * @return
+	 */
 	public static Row result2Row(Result rs) {
 		Row row = new Row();
 		List<Cell> cells = rs.listCells();

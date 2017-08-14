@@ -1,6 +1,9 @@
 package com.faceye.component.data.hbase.parse;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -8,33 +11,117 @@ import org.slf4j.LoggerFactory;
 
 import com.faceye.component.data.hbase.annoation.Column;
 import com.faceye.component.data.hbase.annoation.Entity;
+import com.faceye.component.data.hbase.annoation.RowKey;
 import com.faceye.component.data.hbase.client.RowKeyGenerater;
 import com.faceye.component.data.hbase.wrapper.Col;
 import com.faceye.component.data.hbase.wrapper.Family;
 import com.faceye.component.data.hbase.wrapper.Row;
 import com.faceye.component.data.hbase.wrapper.WTable;
 
+/**
+ * HBase实体注解解释器
+ * 
+ * @author songhaipeng
+ *
+ */
 public class AnnotationParse {
 	private static Logger logger = LoggerFactory.getLogger(AnnotationParse.class);
-	
-	
 
-	public static WTable entity2WTable(Object entity) {
-		WTable wtable = new WTable();
-		Row row = new Row();
-		row.setRowkey(RowKeyGenerater.getInstance().get());
+	public static <T> WTable entity2WTable(T entity) {
+		WTable wtable = null;
 		if (entity != null) {
-			// 获取Entity注解
+			wtable = new WTable();
 			Class clazz = entity.getClass();
-			Entity entityAnnotation = (Entity) clazz.getAnnotation(Entity.class);
-			if (entityAnnotation != null) {
-				String table = entityAnnotation.value();
-				wtable.setTable(table);
+			String table = getTable(clazz);
+			wtable.setTable(table);
+			Row row = entity2Row(entity);
+			row.setRowkey(RowKeyGenerater.getInstance().get());
+			wtable.getRows().add(row);
+		}
+		return wtable;
+	}
+
+	/**
+	 * 将一组对像转化为WTable,以支持批量保存
+	 * 
+	 * @param entities
+	 * @return
+	 */
+	public static <T> WTable entities2WTable(Iterable<T> entities) {
+		WTable wtable = null;
+		if (entities != null) {
+			for (T entity : entities) {
+				if (wtable == null) {
+					wtable = entity2WTable(entity);
+				} else {
+					Row row = entity2Row(entity);
+					wtable.getRows().add(row);
+				}
 			}
-			//获取RowKey注解
-//			RowKey rowKeyAnnotaion=(RowKey) field.getAnnotation(RowKey.class);
-//			if(rowKeyAnnotation)
-			//获取属性上的Column 注解，并组装 为Row对像
+		}
+		return wtable;
+	}
+
+	/**
+	 * 取得对像对应的table
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public static String getTable(Class clazz) {
+		String table = "";
+		Entity entityAnnotation = (Entity) clazz.getAnnotation(Entity.class);
+		if (entityAnnotation != null) {
+			table = entityAnnotation.value();
+		}
+		return table;
+	}
+
+	/**
+	 * 获取Rowkey
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	public static <T> String getRowKey(T entity) {
+		String rowKey = "";
+		Field[] fields = getFields(entity.getClass());
+		for (Field field : fields) {
+			Annotation annotation = getAnnotationOfField(field, RowKey.class);
+			if (annotation != null) {
+				if (!field.isAccessible()) {
+					field.setAccessible(true);
+				}
+				Object obj;
+				try {
+					obj = field.get(entity);
+					rowKey = obj == null ? "" : obj.toString();
+				} catch (IllegalArgumentException e) {
+					logger.error(">>Exception:" + e);
+				} catch (IllegalAccessException e) {
+					logger.error(">>Exception:" + e);
+				}
+
+			}
+		}
+		return rowKey;
+	}
+
+	/**
+	 * 将一个对像转化为一条记录
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	private static <T> Row entity2Row(T entity) {
+		Row row = null;
+		if (entity != null) {
+			Class clazz = entity.getClass();
+			row = new Row();
+			String rowKey = getRowKey(entity);
+			if (StringUtils.isEmpty(rowKey)) {
+				row.setRowkey(RowKeyGenerater.getInstance().get());
+			}
 			Field[] fields = clazz.getDeclaredFields();
 			if (fields != null) {
 				for (Field field : fields) {
@@ -44,16 +131,16 @@ public class AnnotationParse {
 						Family fam = row.getFamily(family);
 						String qualifier = column.qualifier();
 						Col col = field2Col(field, entity);
-						if (StringUtils.isNotEmpty(qualifier)) {
+						if (col!=null && StringUtils.isNotEmpty(qualifier)) {
 							col.setKey(qualifier);
+							fam.getColumns().add(col);
 						}
-						fam.getColumns().add(col);
+						
 					}
 				}
-				wtable.getRows().add(row);
 			}
 		}
-		return wtable;
+		return row;
 	}
 
 	private static Col field2Col(Field field, Object entity) {
@@ -62,17 +149,18 @@ public class AnnotationParse {
 		String key = "";
 		String value = "";
 		try {
-			if(!field.isAccessible()){
+			if (!field.isAccessible()) {
 				field.setAccessible(true);
 			}
 			Object obj = field.get(entity);
 			key = field.getName();
 			if (obj != null) {
 				value = obj.toString();
+				col = new Col();
+				col.setKey(key);
+				col.setValue(value);
 			}
-			col = new Col();
-			col.setKey(key);
-			col.setValue(value);
+
 		} catch (IllegalArgumentException e) {
 			logger.error(">>FaceYe Throws Exception:", e);
 		} catch (IllegalAccessException e) {
@@ -81,18 +169,91 @@ public class AnnotationParse {
 		return col;
 	}
 
-	
-	public Object row2Entity(Row row,Class entityClass){
-		Object obj=null;
-		try {
-			obj = entityClass.newInstance();
-		} catch (InstantiationException e) {
-			logger.error(">>FaceYe Throws Exception:",e);
-		} catch (IllegalAccessException e) {
-			logger.error(">>FaceYe Throws Exception:",e);
+	public static <T> Iterable<T> rows2Entities(List<Row> rows, Class entityClass) {
+		List<T> entities = new ArrayList<T>(0);
+		for (Row row : rows) {
+			T entity = row2Entity(row, entityClass);
+			entities.add(entity);
 		}
-		
-		
+		return entities;
+	}
+
+	/**
+	 * 将HBase一行记录，转化为Entity对像
+	 * 
+	 * @param row
+	 * @param entityClass
+	 * @return
+	 */
+	public static <T> T row2Entity(Row row, Class entityClass) {
+		T obj = null;
+		try {
+			obj = (T) entityClass.newInstance();
+			String rowKey = row.getRowkey();
+			Field[] fields = getFields(entityClass);
+			for (Field field : fields) {
+				Annotation annotation = getAnnotationOfField(field, RowKey.class);
+				if (annotation != null) {
+					if (!field.isAccessible()) {
+						field.setAccessible(true);
+					}
+					field.set(obj, rowKey);
+				}
+				Annotation columnAnnotation = getAnnotationOfField(field, Column.class);
+				if (columnAnnotation != null) {
+					Column column = (Column) columnAnnotation;
+					String family = column.family();
+					String qualifier = column.qualifier();
+					Family f = row.getFamily(family);
+					Col col = f.getCol(qualifier);
+					if (!field.isAccessible()) {
+						field.setAccessible(true);
+					}
+					field.set(obj, col.getValue());
+				}
+			}
+
+		} catch (InstantiationException e) {
+			logger.error(">>FaceYe Throws Exception:", e);
+		} catch (IllegalAccessException e) {
+			logger.error(">>FaceYe Throws Exception:", e);
+		}
 		return obj;
+	}
+
+	/**
+	 * 取得一个对像的全部属
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	private static Field[] getFields(Class clazz) {
+		Field[] fields = null;
+		if (clazz != null) {
+			fields = clazz.getDeclaredFields();
+		}
+		return fields;
+	}
+
+	/**
+	 * 取得属性上的注解
+	 * 
+	 * @param field
+	 * @param annotationCls
+	 * @return
+	 */
+	private static Annotation getAnnotationOfField(Field field, Class annotationCls) {
+		Annotation annotation = field.getAnnotation(annotationCls);
+		return annotation;
+	}
+
+	/**
+	 * 取得属性上的全部注解
+	 * 
+	 * @param field
+	 * @return
+	 */
+	private static Annotation[] getAnnotationsOfField(Field field) {
+		return field.getAnnotations();
 	}
 }
