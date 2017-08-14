@@ -13,7 +13,7 @@ public class Family implements Serializable {
 
 	private String name = "";
 
-	private List<Column> columns = new ArrayList<Column>(0);
+	private List<Col> columns = new ArrayList<Col>(0);
 
 	public String getName() {
 		return name;
@@ -23,11 +23,11 @@ public class Family implements Serializable {
 		this.name = name;
 	}
 
-	public List<Column> getColumns() {
+	public List<Col> getColumns() {
 		return columns;
 	}
 
-	public void setColumns(List<Column> columns) {
+	public void setColumns(List<Col> columns) {
 		this.columns = columns;
 	}
 

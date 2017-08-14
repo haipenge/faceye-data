@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  *
  */
 @Retention(value = RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.METHOD, ElementType.FIELD })
+@Target(value = {ElementType.FIELD })
 public @interface RowKey {
 
 }

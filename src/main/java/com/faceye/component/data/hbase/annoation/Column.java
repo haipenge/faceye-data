@@ -12,7 +12,8 @@ import java.lang.annotation.Target;
  *
  */
 @Retention(value = RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.METHOD, ElementType.FIELD })
+@Target(value = {ElementType.FIELD })
+//ElementType.METHOD, 
 public @interface Column {
 
 	/**
@@ -27,6 +28,6 @@ public @interface Column {
 	 * 
 	 * @return
 	 */
-	public String value();
+	public String qualifier();
 
 }

@@ -6,7 +6,7 @@ import java.io.Serializable;
  * @author songhaipeng
  *
  */
-public class Column implements Serializable{
+public class Col implements Serializable{
 
 	/**
 	 * 
