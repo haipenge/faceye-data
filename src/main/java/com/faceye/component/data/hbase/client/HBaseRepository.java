@@ -69,16 +69,19 @@ public class HBaseRepository {
 				htableDesc.addFamily(new HColumnDescriptor(family));
 			}
 			admin = HBaseClient.getInstance().getAdmin();
-			if (admin.tableExists(htableDesc.getTableName())) {
+			if (admin.tableExists(tableName)) {
 				logger.debug(">>Table :" + htableDesc.getTableName().getNameAsString() + " is exist now.");
 			} else {
 				admin.createTable(htableDesc);
 			}
 		} catch (MasterNotRunningException e) {
+			e.printStackTrace();
 			logger.error(">>Exception:" + e);
 		} catch (ZooKeeperConnectionException e) {
+			e.printStackTrace();
 			logger.error(">>Exception:" + e);
 		} catch (IOException e) {
+			e.printStackTrace();
 			logger.error(">>Exception:" + e);
 		} finally {
 			try {

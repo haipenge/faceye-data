@@ -37,7 +37,7 @@ public class HBaseSupport {
 
 	/**
 	 * 保存数据
-	 * 
+	 * @return rowKey
 	 * @param wtable
 	 */
 	public <T> void put(T entity) {
@@ -90,6 +90,12 @@ public class HBaseSupport {
 			HBaseRepository.getInstance().delete(table, rowKey, "", "");
 		}
 	}
+	
+	public void delete(Class clazz,String rowKey){
+		String table = AnnotationParse.getTable(clazz);
+		HBaseRepository.getInstance().delete(table, rowKey, "", "");
+	}
+	
 
 	/**
 	 * 取得一行记录
@@ -113,8 +119,8 @@ public class HBaseSupport {
 		return entity;
 	}
 
-	public <T> Iterable<T> getPage(Class clazz, FilterList filterList, Integer start, Integer size) {
-		Iterable<T> entities = null;
+	public <T> List<T> getPage(Class clazz, FilterList filterList, Integer start, Integer size) {
+		List<T> entities = null;
 		String table = AnnotationParse.getTable(clazz);
 		List<Row> rows = getRows(table, filterList, start, size);
 		entities = AnnotationParse.rows2Entities(rows, clazz);
@@ -148,7 +154,9 @@ public class HBaseSupport {
 				get.addFamily(Bytes.toBytes(family));
 			}
 			Result rs = tab.get(get);
+			if(!rs.isEmpty()){
 			row = TableReader.result2Row(rs);
+			}
 		} catch (IOException e) {
 			logger.error(">>FaceYe Throws Exception:", e);
 		} finally {

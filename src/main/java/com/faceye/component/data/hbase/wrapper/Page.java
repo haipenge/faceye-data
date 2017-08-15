@@ -9,6 +9,16 @@ public class Page<T> {
 	private Integer start=0;
 	private Integer size=DEFAULT_PAGE_SIZE;
 	private Integer count=0;
+	
+	public Page(List<T> items){
+		this.items=items;
+	}
+	
+	public Page(List<T> items,Integer start,Integer size){
+		this.items=items;
+		this.size=size;
+		this.start=start;
+	}
 	public List<T> getItems() {
 		return items;
 	}

@@ -5,7 +5,10 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,11 +134,11 @@ public class AnnotationParse {
 						Family fam = row.getFamily(family);
 						String qualifier = column.qualifier();
 						Col col = field2Col(field, entity);
-						if (col!=null && StringUtils.isNotEmpty(qualifier)) {
+						if (col != null && StringUtils.isNotEmpty(qualifier)) {
 							col.setKey(qualifier);
 							fam.getColumns().add(col);
 						}
-						
+
 					}
 				}
 			}
@@ -169,7 +172,7 @@ public class AnnotationParse {
 		return col;
 	}
 
-	public static <T> Iterable<T> rows2Entities(List<Row> rows, Class entityClass) {
+	public static <T> List<T> rows2Entities(List<Row> rows, Class entityClass) {
 		List<T> entities = new ArrayList<T>(0);
 		for (Row row : rows) {
 			T entity = row2Entity(row, entityClass);
@@ -188,37 +191,87 @@ public class AnnotationParse {
 	public static <T> T row2Entity(Row row, Class entityClass) {
 		T obj = null;
 		try {
-			obj = (T) entityClass.newInstance();
-			String rowKey = row.getRowkey();
-			Field[] fields = getFields(entityClass);
-			for (Field field : fields) {
-				Annotation annotation = getAnnotationOfField(field, RowKey.class);
-				if (annotation != null) {
-					if (!field.isAccessible()) {
-						field.setAccessible(true);
+			if (row != null) {
+				obj = (T) entityClass.newInstance();
+				String rowKey = row.getRowkey();
+				Field[] fields = getFields(entityClass);
+				for (Field field : fields) {
+					Annotation annotation = getAnnotationOfField(field, RowKey.class);
+					if (annotation != null) {
+						if (!field.isAccessible()) {
+							field.setAccessible(true);
+						}
+						field.set(obj, rowKey);
 					}
-					field.set(obj, rowKey);
-				}
-				Annotation columnAnnotation = getAnnotationOfField(field, Column.class);
-				if (columnAnnotation != null) {
-					Column column = (Column) columnAnnotation;
-					String family = column.family();
-					String qualifier = column.qualifier();
-					Family f = row.getFamily(family);
-					Col col = f.getCol(qualifier);
-					if (!field.isAccessible()) {
-						field.setAccessible(true);
+					Annotation columnAnnotation = getAnnotationOfField(field, Column.class);
+					if (columnAnnotation != null) {
+						Column column = (Column) columnAnnotation;
+						String family = column.family();
+						String qualifier = column.qualifier();
+						Family f = row.getFamily(family);
+						Col col = f.getCol(qualifier);
+						if (!field.isAccessible() && col != null) {
+							field.setAccessible(true);
+							setObjectField(field, obj, col.getValue());
+						}
+
 					}
-					field.set(obj, col.getValue());
 				}
 			}
-
 		} catch (InstantiationException e) {
 			logger.error(">>FaceYe Throws Exception:", e);
 		} catch (IllegalAccessException e) {
 			logger.error(">>FaceYe Throws Exception:", e);
 		}
 		return obj;
+	}
+
+	/**
+	 * 为对像设置 值
+	 * 
+	 * @param field
+	 * @param obj
+	 * @param value
+	 */
+	private static void setObjectField(Field field, Object obj, Object value) {
+		if (field != null && obj != null && value != null) {
+			Class clazz = field.getType();
+			try {
+				if (StringUtils.equals(clazz.getName(), String.class.getName())) {
+					field.set(obj, value.toString());
+				} else if (StringUtils.equals(clazz.getName(), Integer.class.getName())) {
+					field.setInt(obj, NumberUtils.toInt(value.toString()));
+				} else if (StringUtils.equals(clazz.getName(), Double.class.getName())
+						|| StringUtils.equals(clazz.getName(), double.class.getName())) {
+					field.setDouble(obj, NumberUtils.toDouble(value.toString()));
+				} else if (StringUtils.equals(clazz.getName(), Long.class.getName())
+						|| StringUtils.equals(clazz.getName(), long.class.getName())) {
+					field.setLong(obj, NumberUtils.toLong(value.toString()));
+				} else if (StringUtils.equals(clazz.getName(), Boolean.class.getName())
+						|| StringUtils.equals(clazz.getName(), boolean.class.getName())) {
+					field.setBoolean(obj, BooleanUtils.toBoolean(value.toString()));
+				} else if (StringUtils.equals(clazz.getName(), Float.class.getName())
+						|| StringUtils.equals(clazz.getName(), float.class.getName())) {
+					field.setFloat(obj, NumberUtils.toFloat(value.toString()));
+				} else if (StringUtils.equals(clazz.getName(), Short.class.getName())
+						|| StringUtils.equals(clazz.getName(), short.class.getName())) {
+					field.setShort(obj, NumberUtils.toShort(value.toString()));
+				} else {
+					field.set(obj, value);
+				}
+
+				// Class declaringClass = field.getDeclaringClass();
+				// @TODO
+				// else if(StringUtils.equals(clazz.getName(),
+				// Byte.class.getName())){
+				// field.setByte(obj, Bytes.toBytes(value.toString()));
+				// }
+			} catch (IllegalArgumentException e) {
+				logger.error(">>Exception:" + e);
+			} catch (IllegalAccessException e) {
+				logger.error(">>Exception:" + e);
+			}
+		}
 	}
 
 	/**

@@ -24,7 +24,10 @@ import org.slf4j.LoggerFactory;
 public class HBaseClient {
 	private Logger logger = LoggerFactory.getLogger(HBaseClient.class);
 	private static Configuration conf = null;
-	private static final String HBASE_ZK_QUORUM = "localhost";
+//	private static final String HBASE_ZK_QUORUM = "10.12.12.140";
+	private static final String HBASE_ZK_QUORUM = "hd01.aspire.com.cn";
+//	private static final String HBASE_ZK_QUORUM = "hbase-master";
+	private static final String CLIENT_PORT="2181";
 
 	private static class HBaseClientHolder {
 		private static HBaseClient INSTANCE = new HBaseClient();
@@ -33,7 +36,7 @@ public class HBaseClient {
 	private HBaseClient() {
 		conf = HBaseConfiguration.create();
 		conf.set("hbase.zookeeper.quorum", HBASE_ZK_QUORUM);
-
+		conf.set("hbase.zookeeper.property.clientPort",CLIENT_PORT); 
 	}
 
 	public static HBaseClient getInstance() {
@@ -59,9 +62,9 @@ public class HBaseClient {
 	}
 
 	public void create(HTableDescriptor htableDesc) {
-		HBaseAdmin admin = null;
+		Admin admin = null;
 		try {
-			admin = new HBaseAdmin(conf);
+			admin = getAdmin();
 			if (admin.tableExists(htableDesc.getTableName())) {
 				logger.debug(">>Table :" + htableDesc.getTableName().getNameAsString() + " is exist now.");
 			} else {
