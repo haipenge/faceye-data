@@ -213,10 +213,6 @@ public class HBaseRepository {
 						for (int i = 0; i < columnLength; i++) {
 							String column = columns[i];
 							String value = values[i];
-							// Cell cell = new
-							// KeyValue(Bytes.toBytes(columnFamily),
-							// Bytes.toBytes(column), Bytes.toBytes(value));
-							// put.add(cell);
 							put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(column), Bytes.toBytes(value));
 						}
 					}

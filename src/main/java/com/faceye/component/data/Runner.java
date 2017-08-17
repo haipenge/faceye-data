@@ -7,6 +7,7 @@ import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.faceye.component.data.hbase.job.runner.ExampleRunner;
 import com.faceye.component.data.mysql.runner.Stock2HDFS;
 import com.faceye.component.data.mysql.runner.StockRunner;
 
@@ -40,6 +41,10 @@ public class Runner {
 				runnerClass = StockRunner.class.getName();
 				logger.debug(">>FaceYe --Runner class is:" + runnerClass);
 				res = ToolRunner.run(new StockRunner(), args);
+			}else if(StringUtils.equals(args[0], "hbase")){
+				runnerClass=ExampleRunner.class.getName();
+				logger.debug(">>FaceYe --Runner class is:" + runnerClass);
+				res = ToolRunner.run(new ExampleRunner(), args);
 			}
 		} catch (Exception e) {
 			logger.error(">>FaceYe throws Exception: --->{}", e);

@@ -38,7 +38,6 @@ public class AnnotationParse {
 			String table = getTable(clazz);
 			wtable.setTable(table);
 			Row row = entity2Row(entity);
-			row.setRowkey(RowKeyGenerater.getInstance().get());
 			wtable.getRows().add(row);
 		}
 		return wtable;
