@@ -12,8 +12,13 @@ public class Col implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+	/**
+	 * 列修饰符
+	 */
 	private String key="";
+	/**
+	 * 列值,key,value共同组成hbase->row->family->cell
+	 */
 	private String value="";
 	public String getKey() {
 		return key;

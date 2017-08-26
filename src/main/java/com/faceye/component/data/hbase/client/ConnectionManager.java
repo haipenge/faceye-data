@@ -28,8 +28,18 @@ public class ConnectionManager {
 			return conn;
 		}
 	};
+	/**
+	 * 获取链接
+	 * @return
+	 */
 	public static Connection getConnection() {
 		return threadLocal.get();
+	}
+	/**
+	 * 关闭链接
+	 */
+	public static void close(){
+		threadLocal.remove();
 	}
 
 }

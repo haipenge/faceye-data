@@ -8,12 +8,24 @@
 	<name>faceye-data</name>
 	<packaging>jar</packaging>
 	<properties>
+		<!-- 文件拷贝时的编码 -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<!-- 编译时的编码 -->
+		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+		<!-- Set Default JDK -->
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+		<!-- Project Version's -->
 		<hadoop.version>2.7.3</hadoop.version>
 		<mysql.version>6.0.6</mysql.version>
 		<mongo-java-driver.version>3.4.2</mongo-java-driver.version>
 		<mongo-hadoop-core.version>1.5.1</mongo-hadoop-core.version>
 		<hbase-client.version>1.2.6</hbase-client.version>
 		<hive.version>2.3.0</hive.version>
+		<spark.version>2.2.0</spark.version>
+		<storm.version>1.1.1</storm.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -61,6 +73,29 @@
 			<artifactId>hive-jdbc</artifactId>
 			<version>${hive.version}</version>
 		</dependency>
+		<dependency> <!-- Spark dependency -->
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-sql_2.11</artifactId>
+			<version>${spark.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-mllib_2.10</artifactId>
+			<version>${spark.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-streaming_2.10</artifactId>
+			<version>${spark.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.storm</groupId>
+			<artifactId>storm-core</artifactId>
+			<version>${storm.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>jdk.tools</groupId>
 			<artifactId>jdk.tools</artifactId>

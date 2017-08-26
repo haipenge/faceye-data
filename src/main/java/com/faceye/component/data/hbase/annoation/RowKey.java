@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * RowKey 注解
+ * RowKey 注解,as hbase row key 
  * @author songhaipeng
  *
  */

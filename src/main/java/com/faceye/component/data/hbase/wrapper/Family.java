@@ -6,6 +6,11 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * 列族
+ * @author songhaipeng
+ *
+ */
 public class Family implements Serializable {
 
 	/**

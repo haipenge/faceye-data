@@ -13,5 +13,9 @@ import java.lang.annotation.Target;
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE })
 public @interface Entity {
+	/**
+	 * as hbase table name
+	 * @return
+	 */
 	public String value();
 }

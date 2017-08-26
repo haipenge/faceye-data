@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.faceye.component.data.hbase.job.runner.ExampleRunner;
 import com.faceye.component.data.mysql.runner.Stock2HDFS;
 import com.faceye.component.data.mysql.runner.StockRunner;
+import com.faceye.component.data.spark.Bootstrap;
 
 public class Runner {
 	private Logger logger = LoggerFactory.getLogger(Runner.class);
@@ -45,6 +46,10 @@ public class Runner {
 				runnerClass=ExampleRunner.class.getName();
 				logger.debug(">>FaceYe --Runner class is:" + runnerClass);
 				res = ToolRunner.run(new ExampleRunner(), args);
+			}else if(StringUtils.equals(args[0], "spark")){
+				System.out.println(">>Start to run spark app.");
+				Bootstrap bootstrap=new Bootstrap();
+				bootstrap.run();
 			}
 		} catch (Exception e) {
 			logger.error(">>FaceYe throws Exception: --->{}", e);

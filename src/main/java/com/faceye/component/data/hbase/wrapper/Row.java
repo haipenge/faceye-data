@@ -6,11 +6,19 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * 行
+ * @author songhaipeng
+ *
+ */
 public class Row implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * 行key,主键
+	 */
 	private String rowkey = "";
 
 	private List<Family> families = new ArrayList<Family>(0);
@@ -47,6 +55,7 @@ public class Row implements Serializable {
 		return res;
 	}
 
+	@Deprecated
 	public void addFamily(Family family) {
 		if (!isExistFamily(family)) {
 			families.add(family);

@@ -14,6 +14,7 @@ class Distribute(object):
 		self.slave_ips=['10.12.12.141','10.12.12.142','10.12.12.143']
 		self.hadoop_version='2.7.3'
 		self.hbase_version='1.3.1'
+		self.spark_version='spark-2.2.0-bin-hadoop2.7'
 		self.root_dir='/home/prnp/hadoop'
 		self.hadoop_user='prnp'
 	def dist(self):
@@ -23,6 +24,16 @@ class Distribute(object):
 			target_dir=self.hadoop_user+'@'+ip+':'+self.root_dir+"/"
 			os.system('scp '+source_file+' '+target_dir)
 			os.system('ssh '+self.hadoop_user+'@'+ip+ ' \"cd '+self.root_dir+';tar -zxvf hadoop-'+self.hadoop_version+'.tar.gz\"')
+	def dist_spark(self):
+		for host in self.slave_ips:
+			source_file=self.root_dir+'/'+self.spark_version+'.tgz'
+			target_dir=self.hadoop_user+'@'+host+':'+self.root_dir+'/'
+			os.system('scp '+source_file+' '+target_dir)
+			os.system('ssh '+self.hadoop_user+'@'+host+' \"cd '+self.root_dir+';tar -zxvf '+self.spark_version+'.tgz"')
+	def dist_spark_conf(self):
+		spark_conf_dir=self.root_dir+'/'+self.spark_version+'/conf'
+		for host in self.slave_ips:
+			os.system('scp -r '+spark_conf_dir+'/* '+self.hadoop_user+'@'+host+':'+spark_conf_dir)
 	def dist_hbase(self):
 		for host in self.slave_ips:
 			source_file=self.root_dir+'/hbase-'+self.hbase_version+'-bin.tar.gz'
@@ -54,7 +65,7 @@ class Distribute(object):
 
 if __name__=='__main__':
 	distribute=Distribute()
-	command=raw_input('1:Dist hadoop version to slave.\n2:Dist hadop conf,native lib to slave.\n3:Do source  etc profile on slave.\n4:Dist hbase.\n5:Dist hbase conf\nChoose[1,2,3,4]:')
+	command=raw_input('1:Dist hadoop version to slave.\n2:Dist hadop conf,native lib to slave.\n3:Do source  etc profile on slave.\n4:Dist hbase.\n5:Dist hbase conf\n6:Dist spark.\n7.Dist spark conf.\nChoose[1,2,3,4,5,6,7]:')
 	if command=='1':
 		distribute.dist()
 	elif command == '2':
@@ -66,6 +77,10 @@ if __name__=='__main__':
 		distribute.dist_hbase_conf()
 	elif command == '5':
 		distribute.dist_hbase_conf()
+	elif command == '6':
+		distribute.dist_spark()
+	elif command == '7':
+		distribute.dist_spark_conf()
 	else:
 		print 'Erro input'
 
