@@ -26,27 +26,33 @@
 		<hive.version>2.3.0</hive.version>
 		<spark.version>2.2.0</spark.version>
 		<storm.version>1.1.1</storm.version>
+		<storm.version>1.1.1</storm.version>
+		<kafka-clients.version>0.11.0.0</kafka-clients.version>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-common</artifactId>
 			<version>${hadoop.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-client</artifactId>
 			<version>${hadoop.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-hdfs</artifactId>
 			<version>${hadoop.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-mapreduce-client-common</artifactId>
 			<version>${hadoop.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -62,17 +68,20 @@
 			<groupId>org.mongodb.mongo-hadoop</groupId>
 			<artifactId>mongo-hadoop-core</artifactId>
 			<version>${mongo-hadoop-core.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hbase</groupId>
 			<artifactId>hbase-client</artifactId>
 			<version>${hbase-client.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hive</groupId>
 			<artifactId>hive-jdbc</artifactId>
 			<version>${hive.version}</version>
 		</dependency>
+
 		<dependency> <!-- Spark dependency -->
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-sql_2.11</artifactId>
@@ -90,10 +99,27 @@
 			<version>${spark.version}</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka-clients</artifactId>
+			<version>${kafka-clients.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.storm/storm-core -->
 		<dependency>
 			<groupId>org.apache.storm</groupId>
 			<artifactId>storm-core</artifactId>
 			<version>${storm.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.storm/storm-kafka -->
+		<dependency>
+			<groupId>org.apache.storm</groupId>
+			<artifactId>storm-kafka</artifactId>
+			<version>${storm.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -115,8 +141,7 @@
 				<configuration>
 					<!-- not append assembly id in release file name -->
 					<appendAssemblyId>false</appendAssemblyId>
-					<!-- <descriptors> <descriptor> src/main/assemble/package.xml </descriptor> 
-						</descriptors> -->
+					<!-- <descriptors> <descriptor> src/main/assemble/package.xml </descriptor> </descriptors> -->
 				</configuration>
 				<executions>
 					<execution>
@@ -128,11 +153,9 @@
 						<configuration>
 							<skipAssembly>false</skipAssembly><!-- 跳过这个执行器 -->
 							<!-- 自定义输出目录（finalName为最终项目构建名称） -->
-							<!-- <outputDirectory> ${project.build.directory}/${project.build.finalName}/WEB-INF/lib 
-								</outputDirectory> -->
+							<!-- <outputDirectory> ${project.build.directory}/${project.build.finalName}/WEB-INF/lib </outputDirectory> -->
 							<!-- 描述符文件 -->
-							<!-- <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> 
-								</descriptorRefs> -->
+							<!-- <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> </descriptorRefs> -->
 							<descriptors>
 								<descriptor>src/main/resources/assembly/jar.xml</descriptor>
 							</descriptors>
@@ -149,12 +172,36 @@
 							</descriptorRefs>
 						</configuration>
 					</execution>
-					<!-- <execution> <id>make-zip</id> <phase>package</phase> <goals> <goal>single</goal> 
-						</goals> <configuration> <skipAssembly>true</skipAssembly> <descriptors> 
-						<descriptor>src/main/assembly/zip.xml</descriptor> </descriptors> </configuration> 
-						</execution> -->
+					<!-- <execution> <id>make-zip</id> <phase>package</phase> <goals> <goal>single</goal> </goals> <configuration> <skipAssembly>true</skipAssembly> 
+						<descriptors> <descriptor>src/main/assembly/zip.xml</descriptor> </descriptors> </configuration> </execution> -->
 				</executions>
 			</plugin>
+<!-- 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>1.4</version>
+				<configuration>
+					<createDependencyReducedPom>true</createDependencyReducedPom>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass></mainClass>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			 -->
 		</plugins>
 	</build>
 
