@@ -1,6 +1,6 @@
 package com.faceye.component.data.spark;
 
-import com.faceye.component.data.spark.learn.WordCount;
+import com.faceye.component.data.spark.example.WordCount;
 
 public class Bootstrap {
 	public static void main(String[] args) {

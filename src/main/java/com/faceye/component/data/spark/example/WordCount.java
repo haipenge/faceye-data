@@ -1,4 +1,4 @@
-package com.faceye.component.data.spark.learn;
+package com.faceye.component.data.spark.example;
 
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.SparkSession;
