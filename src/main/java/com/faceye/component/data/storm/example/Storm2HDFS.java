@@ -94,6 +94,6 @@ public class Storm2HDFS {
 //			Thread.sleep(60000);
 //			cluster.shutdown();
 //		}
-	}
+//	}
 
 }
