@@ -1,6 +1,6 @@
 package com.faceye.component.data.spark;
 
-import com.faceye.component.data.spark.example.WordCount;
+import com.faceye.component.data.spark.stream.KafkaStream;
 
 public class Bootstrap {
 	public static void main(String[] args) {
@@ -13,7 +13,9 @@ public class Bootstrap {
 	}
 
 	public void run() {
-		WordCount wordCount = new WordCount();
-		wordCount.run();
+//		WordCount wordCount = new WordCount();
+//		wordCount.run();
+		Run kafka=new KafkaStream();
+		kafka.run();
 	}
 }

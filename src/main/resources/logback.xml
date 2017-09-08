@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-	<property name="log.dir" value="${x.logger.dir}"></property>
-	<property name="logger.level" value="${x.logger.level}"></property>
+	<property name="log.dir" value="/tmp"></property>
+	<property name="logger.level" value="debug"></property>
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 	    <filter class="ch.qos.logback.classic.filter.LevelFilter">
 	        <level>DEBUG</level>
@@ -15,9 +15,9 @@
 	</appender>
 	<appender name="rollingFile"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${log.dir}/faceye-code-log.log</file>
+		<file>${log.dir}/faceye-data-log.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${log.dir}/faceye-code-log.%d{yyyy-MM-dd}.log
+			<fileNamePattern>${log.dir}/faceye-data-log.%d{yyyy-MM-dd}.log
 			</fileNamePattern>
 		</rollingPolicy>
 		<encoder>
@@ -33,9 +33,9 @@
 
 	<appender name="info-rollingFile"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${log.dir}/faceye-code-info-log.log</file>
+		<file>${log.dir}/faceye-data-info-log.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${log.dir}/faceye-code-info-log.%d{yyyy-MM-dd}.log
+			<fileNamePattern>${log.dir}/faceye-data-info-log.%d{yyyy-MM-dd}.log
 			</fileNamePattern>
 			<MaxHistory>30</MaxHistory>
 		</rollingPolicy>
@@ -53,9 +53,9 @@
 
 	<appender name="debug-rollingFile"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${log.dir}/faceye-code-debug-log.log</file>
+		<file>${log.dir}/faceye-data-debug-log.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${log.dir}/faceye-code-debug-log.%d{yyyy-MM-dd}.log
+			<fileNamePattern>${log.dir}/faceye-data-debug-log.%d{yyyy-MM-dd}.log
 			</fileNamePattern>
 			<MaxHistory>30</MaxHistory>
 		</rollingPolicy>
@@ -76,9 +76,9 @@
 
 	<appender name="error-rollingFile"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${log.dir}/faceye-code-error-log.log</file>
+		<file>${log.dir}/faceye-data-error-log.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${log.dir}/faceye-code-error-log.%d{yyyy-MM-dd}.log
+			<fileNamePattern>${log.dir}/faceye-data-error-log.%d{yyyy-MM-dd}.log
 			</fileNamePattern>
 			<MaxHistory>30</MaxHistory>
 		</rollingPolicy>
@@ -97,9 +97,9 @@
 
 	<appender name="warn-rollingFile"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${log.dir}/faceye-code-warn-log.log</file>
+		<file>${log.dir}/faceye-data-warn-log.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${log.dir}/faceye-code-warn-log.%d{yyyy-MM-dd}.log
+			<fileNamePattern>${log.dir}/faceye-data-warn-log.%d{yyyy-MM-dd}.log
 			</fileNamePattern>
 		</rollingPolicy>
 		<encoder>
@@ -132,7 +132,7 @@
 	</logger>
 	<logger name="org" level="error"></logger>
 
-	<root level="${x.logger.level}">
+	<root level="debug">
 		<appender-ref ref="console" />
 		<appender-ref ref="error-rollingFile" />
 		<appender-ref ref="info-rollingFile" />

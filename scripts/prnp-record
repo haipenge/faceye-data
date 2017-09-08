@@ -1,0 +1,9 @@
+#创建统计结果表
+create stat_delivery(exp_org_code string,total int) ROW FORMAT DELIMITED FIELDS TERMINATED BY ‘\t’;
+
+Hive DB->stat_delivery
+/user/hive/warehouse/nuc.db/stat_delivery
+
+sqoop export --connect jdbc:mysql://host:3306/test --username root --password admin --table uv_info --export-dir /user/hive/warehouse/uv/dt=2011-08-03
+
+

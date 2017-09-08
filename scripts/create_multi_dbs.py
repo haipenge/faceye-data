@@ -97,14 +97,23 @@ class SchemaTools(object):
         user = self.__get_user(set_env)
         password = self.__get_password(set_env)
         if set_env == 'dev':
-            for host in self.dev_servers:
-                self.__exec_db_cmds(host, user, password, sql)
+            for i,host in enumerate(self.dev_servers):
+                db_indexs = range(i * 25, (i + 1) * 25)
+                for x in db_indexs:
+                    _sql='use dbs'+str(x)+';'+sql
+                    self.__exec_db_cmds(host, user, password, _sql)
         elif set_env == 'test':
-            for host in self.test_servers:
-                self.__exec_db_cmds(host, user, password, sql)
+            for i,host in enumerate(self.test_servers):
+                db_indexs = range(i * 25, (i + 1) * 25)
+                for x in db_indexs:
+                    _sql='use dbs'+str(x)+';'+sql
+                    self.__exec_db_cmds(host, user, password, _sql)
         elif set_env == 'prod':
-            for host in self.servers:
-                self.__exec_db_cmds(host, user, password, sql)
+            for i,host in enumerate(self.servers):
+                db_indexs = range(i * 25, (i + 1) * 25)
+                for x in db_indexs:
+                    _sql='use dbs'+str(x)+';'+sql
+                    self.__exec_db_cmds(host, user, password, _sql)
         else:
             print 'env is not exist'
 

@@ -11,7 +11,8 @@ import tempfile
 
 class Distribute(object):
 	def __init__(self):
-		self.slave_ips=['10.12.12.141','10.12.12.142','10.12.12.143']
+		self.slave_ips=['10.12.12.141','10.12.12.142','10.12.12.143','10.1.5.105','10.1.5.126','10.1.5.127','10.1.5.250']
+		#self.slave_ips=['10.1.5.105','10.1.5.126','10.1.5.127','10.1.5.250']
 		self.hadoop_version='2.7.3'
 		self.hbase_version='1.3.1'
 		self.spark_version='spark-2.2.0-bin-hadoop2.7'

@@ -15,9 +15,11 @@
 				<exclude>**/assembly/*.*</exclude>
 				<exclude>**/db/**/*.*</exclude>
 				<exclude>**/**/**.xml</exclude>
+				<!-- 
 				<exclude>**/**/*.properties</exclude>
 				<exclude>*.properties</exclude>
 				<exclude>*.xml</exclude>
+				 -->
 			</excludes>
 			<outputDirectory>/</outputDirectory>
 		</fileSet>

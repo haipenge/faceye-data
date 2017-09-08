@@ -42,13 +42,13 @@ public class Runner {
 				runnerClass = StockRunner.class.getName();
 				logger.debug(">>FaceYe --Runner class is:" + runnerClass);
 				res = ToolRunner.run(new StockRunner(), args);
-			}else if(StringUtils.equals(args[0], "hbase")){
-				runnerClass=ExampleRunner.class.getName();
+			} else if (StringUtils.equals(args[0], "hbase")) {
+				runnerClass = ExampleRunner.class.getName();
 				logger.debug(">>FaceYe --Runner class is:" + runnerClass);
 				res = ToolRunner.run(new ExampleRunner(), args);
-			}else if(StringUtils.equals(args[0], "spark")){
+			} else if (StringUtils.equals(args[0], "spark")) {
 				System.out.println(">>Start to run spark app.");
-				Bootstrap bootstrap=new Bootstrap();
+				Bootstrap bootstrap = new Bootstrap();
 				bootstrap.run();
 			}
 		} catch (Exception e) {
