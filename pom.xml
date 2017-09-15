@@ -19,7 +19,7 @@
 		<maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
 		<!-- Project Version's -->
 		<hadoop.version>2.7.3</hadoop.version>
-		<mysql.version>6.0.6</mysql.version>
+		<mysql.version>5.1.42</mysql.version>
 		<mongo-java-driver.version>3.4.2</mongo-java-driver.version>
 		<mongo-hadoop-core.version>1.5.1</mongo-hadoop-core.version>
 		<hbase-client.version>1.2.6</hbase-client.version>
@@ -105,9 +105,7 @@
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka-clients</artifactId>
 			<version>${kafka-clients.version}</version>
-			<!-- 
-			<scope>provided</scope>
-			 -->
+			<!-- <scope>provided</scope> -->
 		</dependency>
 
 		<dependency>
@@ -115,7 +113,7 @@
 			<artifactId>spark-streaming-kafka-0-10_2.11</artifactId>
 			<version>${spark.version}</version>
 		</dependency>
-
+<!-- 
 		<dependency>
 			<groupId>org.apache.storm</groupId>
 			<artifactId>storm-core</artifactId>
@@ -128,23 +126,18 @@
 			<version>${storm.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- 
+		 -->
+		<!-- <dependency> <groupId>org.elasticsearch.client</groupId> <artifactId>transport</artifactId> 
+			<version>${elasticsearch.version}</version> <scope>provided</scope> </dependency> 
+			<dependency> <groupId>org.elasticsearch</groupId> <artifactId>elasticsearch-hadoop</artifactId> 
+			<version>${elasticsearch.version}</version> <scope>provided</scope> </dependency> -->
 		<dependency>
-			<groupId>org.elasticsearch.client</groupId>
-			<artifactId>transport</artifactId>
-			<version>${elasticsearch.version}</version>
-			<scope>provided</scope>
+			<groupId>jdk.tools</groupId>
+			<artifactId>jdk.tools</artifactId>
+			<version>1.8</version>
+			<scope>system</scope>
+			<systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>
 		</dependency>
-		<dependency>
-			<groupId>org.elasticsearch</groupId>
-			<artifactId>elasticsearch-hadoop</artifactId>
-			<version>${elasticsearch.version}</version>
-			<scope>provided</scope>
-		</dependency>
- -->
-		<!-- <dependency> <groupId>jdk.tools</groupId> <artifactId>jdk.tools</artifactId> 
-			<version>1.8</version> <scope>system</scope> <systemPath>${java.home}/../lib/tools.jar</systemPath> 
-			</dependency> -->
 	</dependencies>
 
 	<!-- Package as an executable jar -->

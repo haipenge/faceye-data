@@ -11,9 +11,11 @@ import tempfile
 
 class SchemaTools(object):
     def __init__(self):
-        self.servers = ['10.11.100.39', '10.11.100.40', '10.11.100.41', '10.11.100.42']
+        #self.servers = ['10.11.100.39', '10.11.100.40', '10.11.100.41', '10.11.100.42']
         self.test_servers = ['10.1.5.105', '10.1.5.250', '10.1.5.126', '10.1.5.127']
         self.dev_servers = ['10.12.12.140', '10.12.12.141', '10.12.12.142', '10.12.12.143']
+        #扩展机器
+        self.extends_server=['10.11.100.230','10.11.100.231','10.11.100.232','10.11.100.233']
         self.user_and_password = {'user':'prnp', 'password':'prnp'}
         self.dev_user_and_password = {'user':'prnp', 'password':'prnp'}
         self.test_user_and_password = {'user':'prnp', 'password':'Mysql@105'} 
@@ -51,46 +53,46 @@ class SchemaTools(object):
         password = user['password']
         for i, ip in enumerate(hosts):
             print i, ip
-            db_indexs = range(i * 25, (i + 1) * 25)
-            for i in db_indexs:
-                command = 'create database dbs' + str(i)
+            db_indexs = range(i * 25+100, (i + 1) * 20+100)
+            for x in db_indexs:
+                command = 'create database dbs' + str(x)
                 print command
                 self.__exec_db_cmds(ip, u, password, command)
         cmd = 'create database nuc_pub;'
-        self.__exec_db_cmds(hosts[0], u, password, cmd)
+        #self.__exec_db_cmds(hosts[0], u, password, cmd)
         cmd = 'create database nuc_stat;'
-        self.__exec_db_cmds(hosts[1], u, password, cmd)
+        #self.__exec_db_cmds(hosts[1], u, password, cmd)
         cmd = 'create database nuc_indivuser;'
-        self.__exec_db_cmds(hosts[2], u, password, cmd)
+        #self.__exec_db_cmds(hosts[2], u, password, cmd)
     # 删除测试库
     def __drop_dbs(self, user, hosts):
         u = user['user']
         password = user['password']
         for i, ip in enumerate(hosts):
-            db_indexes = range(i * 25, (i + 1) * 25)
+            db_indexes = range(i * 25 +100, (i + 1) * 25 +100)
             for index in db_indexes:
                 cmd = 'drop database dbs' + str(index)
                 self.__exec_db_cmds(ip, u, password, cmd)
         cmd = 'drop database nuc_pub;'
-        self.__exec_db_cmds(hosts[0], u, password, cmd)
+        #self.__exec_db_cmds(hosts[0], u, password, cmd)
         cmd = 'drop database nuc_stat;'
-        self.__exec_db_cmds(hosts[1], u, password, cmd)
+        #self.__exec_db_cmds(hosts[1], u, password, cmd)
         cmd = 'drop database nuc_indivuser;'
-        self.__exec_db_cmds(hosts[2], u, password, cmd)
+        #self.__exec_db_cmds(hosts[2], u, password, cmd)
     def generate(self, set_env):
         if set_env == 'test':
             self.__generate_db(self.test_user_and_password, self.test_servers)
         elif set_env == 'dev':
             self.__generate_db(self.dev_user_and_password, self.dev_servers)
         else:
-            self.__generate_db(self.user_and_password, self.servers)
+            self.__generate_db(self.user_and_password, self.extends_server)
     def drop(self, set_env):
         if set_env == 'test':
             self.__drop_dbs(self.test_user_and_password, self.test_servers)
         elif set_env == 'dev':
             self.__drop_dbs(self.dev_user_and_password, self.dev_servers)
         elif set_env == 'prod':
-            self.__drop_dbs(self.user_and_password, self.servers)
+            self.__drop_dbs(self.user_and_password, self.extends_server)
         else:
             print('输入参数错误，环境参数范围：[test,dev,prod]')
     def execSql(self, set_env, sql):
