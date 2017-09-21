@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.faceye.component.data.conf.Configuration;
+
 public class ConnectionManager implements Serializable {
 	/**
 	 * 
@@ -15,15 +17,17 @@ public class ConnectionManager implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
 //	private static final String URL = "jdbc:mysql://10.12.12.140:18067/nuc_sharding?useEncode=true&characterEncoding=utf8";
-	private static final String URL="jdbc:mysql://10.12.12.140:3306/nuc_test?useEncode=true&characterEncoding=utf8";
-	private static final String USER = "prnp";
-	private static final String PASSWORD = "prnp";
+//	private static final String URL="jdbc:mysql://10.12.12.140:3306/nuc_test?useEncode=true&characterEncoding=utf8";
+	
+	private static final String URL=Configuration.get("jdbc.url");
+	private static final String USER =Configuration.get("jdbc.user");
+	private static final String PASSWORD = Configuration.get("jdbc.password");
 	private static ThreadLocal<Connection> threadLocal = new ThreadLocal<Connection>() {
 		@Override
 		protected Connection initialValue() {
 			Connection connection = null;
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName(Configuration.get("jdbc.driver"));
 				connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			} catch (ClassNotFoundException e) {
 				logger.error(">>Exception:" + e);

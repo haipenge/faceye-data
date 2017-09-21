@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 public class ConnectionManager {
 	private static Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
 	private static Configuration conf = HBaseConfiguration.create();
-	private static final String HBASE_ZK_QUORUM = "localhost";
+	private static final String HBASE_ZK_QUORUM = com.faceye.component.data.conf.Configuration.get("hbase.zookeeper.quorum");
 	static {
 		conf.set("hbase.zookeeper.quorum", HBASE_ZK_QUORUM);
 	}

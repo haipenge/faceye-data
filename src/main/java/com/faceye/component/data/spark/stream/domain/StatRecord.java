@@ -1,9 +1,14 @@
-package com.faceye.component.data.spark.stream;
+package com.faceye.component.data.spark.stream.domain;
 
 import java.io.Serializable;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * 全量统计
+ * @author songhaipeng
+ *
+ */
 public class StatRecord implements Serializable {
 
 	/**
@@ -15,6 +20,16 @@ public class StatRecord implements Serializable {
 	private String city = "";
 	private String country = "";
 	private String checkDate = "";
+	
+	//以下两条未使用
+	//协议，非协议｜查验方式 
+	private String checkMethod="";
+	//已关联未关联,需要查redis
+	private String isReported="";
+//	
+//	private String 
+
+	private Integer total = 0;
 
 	public String getExpOrgCode() {
 		return expOrgCode;
@@ -54,6 +69,32 @@ public class StatRecord implements Serializable {
 
 	public void setCheckDate(String checkDate) {
 		this.checkDate = checkDate;
+	}
+
+	public Integer getTotal() {
+		return total;
+	}
+
+	public void setTotal(Integer total) {
+		this.total = total;
+	}
+	
+	
+
+	public String getCheckMethod() {
+		return checkMethod;
+	}
+
+	public void setCheckMethod(String checkMethod) {
+		this.checkMethod = checkMethod;
+	}
+
+	public String getIsReported() {
+		return isReported;
+	}
+
+	public void setIsReported(String isReported) {
+		this.isReported = isReported;
 	}
 
 	@Override

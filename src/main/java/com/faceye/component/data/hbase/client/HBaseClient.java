@@ -10,8 +10,6 @@ import org.apache.hadoop.hbase.ZooKeeperConnectionException;
 import org.apache.hadoop.hbase.client.Admin;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
-import org.apache.hadoop.hbase.client.HBaseAdmin;
-import org.apache.hadoop.hbase.client.HConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,9 +23,9 @@ public class HBaseClient {
 	private Logger logger = LoggerFactory.getLogger(HBaseClient.class);
 	private static Configuration conf = null;
 //	private static final String HBASE_ZK_QUORUM = "10.12.12.140";
-	private static final String HBASE_ZK_QUORUM = "hd01.aspire.com.cn";
+	private static final String HBASE_ZK_QUORUM = com.faceye.component.data.conf.Configuration.get("hbase.zookeeper.quorum");
 //	private static final String HBASE_ZK_QUORUM = "hbase-master";
-	private static final String CLIENT_PORT="2181";
+	private static final String CLIENT_PORT=com.faceye.component.data.conf.Configuration.get("hbase.zookeeper.property.clientPort");
 
 	private static class HBaseClientHolder {
 		private static HBaseClient INSTANCE = new HBaseClient();

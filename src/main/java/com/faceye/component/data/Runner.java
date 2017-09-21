@@ -11,6 +11,8 @@ import com.faceye.component.data.hbase.job.runner.ExampleRunner;
 import com.faceye.component.data.mysql.runner.Stock2HDFS;
 import com.faceye.component.data.mysql.runner.StockRunner;
 import com.faceye.component.data.spark.Bootstrap;
+import com.faceye.component.data.spark.stream.output.StatCompanyConsumer;
+import com.faceye.component.data.spark.stream.output.StatRecordConsumer;
 
 public class Runner {
 	private Logger logger = LoggerFactory.getLogger(Runner.class);
@@ -50,6 +52,12 @@ public class Runner {
 				System.out.println(">>Start to run spark app.");
 				Bootstrap bootstrap = new Bootstrap();
 				bootstrap.run();
+			} else if (StringUtils.equals(args[0], "consumer-stat-record")) {
+				StatRecordConsumer consumer = new StatRecordConsumer();
+				consumer.consumer();
+			} else if (StringUtils.equals(args[0], "consumer-stat-company")) {
+				StatCompanyConsumer consumer = new StatCompanyConsumer();
+				consumer.consumer();
 			}
 		} catch (Exception e) {
 			logger.error(">>FaceYe throws Exception: --->{}", e);
