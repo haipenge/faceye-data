@@ -11,6 +11,7 @@ import com.faceye.component.data.hbase.job.runner.ExampleRunner;
 import com.faceye.component.data.mysql.runner.Stock2HDFS;
 import com.faceye.component.data.mysql.runner.StockRunner;
 import com.faceye.component.data.spark.Bootstrap;
+import com.faceye.component.data.spark.stream.CheckRecoderGenerator;
 import com.faceye.component.data.spark.stream.output.StatCompanyConsumer;
 import com.faceye.component.data.spark.stream.output.StatRecordConsumer;
 
@@ -58,6 +59,9 @@ public class Runner {
 			} else if (StringUtils.equals(args[0], "consumer-stat-company")) {
 				StatCompanyConsumer consumer = new StatCompanyConsumer();
 				consumer.consumer();
+			}else if(StringUtils.equals(args[0], "stream-express-delivery-topic")){
+				CheckRecoderGenerator g=new CheckRecoderGenerator();
+				g.generator();
 			}
 		} catch (Exception e) {
 			logger.error(">>FaceYe throws Exception: --->{}", e);

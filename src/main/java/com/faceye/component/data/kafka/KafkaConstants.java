@@ -18,6 +18,9 @@ public class KafkaConstants {
 	//按公司维度分析topic
 	public static final String TOPIC_STAT_COMPANY="topic-stat-company";
 	
+	//自动生成模拟数据的topic
+	public static final String TOPIC_STREAM_EXPRESS_DELIVERY_GENERATE="stream-express-delivery-topic";
+	
 	
 	
 }

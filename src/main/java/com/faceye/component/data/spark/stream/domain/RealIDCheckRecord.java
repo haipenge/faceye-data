@@ -8,8 +8,6 @@ import javax.xml.bind.annotation.XmlElement;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.faceye.component.data.spark.stream.SenderAddress;
-
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RealIDCheckRecord  implements Serializable {

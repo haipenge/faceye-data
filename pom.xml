@@ -30,6 +30,7 @@
 		<kafka-clients.version>0.11.0.0</kafka-clients.version>
 		<elasticsearch.version>5.5.2</elasticsearch.version>
 		<jedis.version>2.9.0</jedis.version>
+		<logback.version>1.2.3</logback.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -115,24 +116,40 @@
 			<version>${spark.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>redis.clients</groupId>
-		    <artifactId>jedis</artifactId>
-		    <version>${jedis.version}</version>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>${jedis.version}</version>
 		</dependency>
-<!-- 
+
 		<dependency>
-			<groupId>org.apache.storm</groupId>
-			<artifactId>storm-core</artifactId>
-			<version>${storm.version}</version>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
-			<groupId>org.apache.storm</groupId>
-			<artifactId>storm-kafka</artifactId>
-			<version>${storm.version}</version>
-			<scope>provided</scope>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-access</artifactId>
+			<version>${logback.version}</version>
 		</dependency>
-		 -->
+
+		<!-- <dependency> <groupId>org.apache.storm</groupId> <artifactId>storm-core</artifactId> 
+			<version>${storm.version}</version> <scope>provided</scope> </dependency> 
+			<dependency> <groupId>org.apache.storm</groupId> <artifactId>storm-kafka</artifactId> 
+			<version>${storm.version}</version> <scope>provided</scope> </dependency> -->
 		<!-- <dependency> <groupId>org.elasticsearch.client</groupId> <artifactId>transport</artifactId> 
 			<version>${elasticsearch.version}</version> <scope>provided</scope> </dependency> 
 			<dependency> <groupId>org.elasticsearch</groupId> <artifactId>elasticsearch-hadoop</artifactId> 
