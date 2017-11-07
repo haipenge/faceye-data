@@ -14,6 +14,7 @@ import com.faceye.component.data.spark.Bootstrap;
 import com.faceye.component.data.spark.stream.CheckRecoderGenerator;
 import com.faceye.component.data.spark.stream.output.StatCompanyConsumer;
 import com.faceye.component.data.spark.stream.output.StatRecordConsumer;
+import com.faceye.component.data.util.LogUtil;
 
 public class Runner {
 	private Logger logger = LoggerFactory.getLogger(Runner.class);
@@ -24,6 +25,7 @@ public class Runner {
 	}
 
 	public int run(String[] args) throws IOException {
+		LogUtil.start();
 		int res = 0;
 		// Configuration conf = BusinessConfiguration.create();
 		logger.debug(">>FaceYE --> Start Runner now.");

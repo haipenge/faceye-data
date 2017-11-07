@@ -3,6 +3,11 @@ package com.faceye.component.data.redis;
 import redis.clients.jedis.JedisCommands;
 import redis.clients.jedis.JedisPoolConfig;
 
+/**
+ * Redis连接池抽像类
+ * @author songhaipeng
+ *
+ */
 public abstract class AbstractConnectionManager {
 	protected JedisPoolConfig getJedisPoolConfig() {
 		int maxActive = 1024;

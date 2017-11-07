@@ -12,6 +12,11 @@ import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.util.Pool;
 
+/**
+ * Redis连接池
+ * @author songhaipeng
+ *
+ */
 public class RedisConnectionManager extends AbstractConnectionManager {
 
 	private Logger logger = LoggerFactory.getLogger(RedisClient.class);

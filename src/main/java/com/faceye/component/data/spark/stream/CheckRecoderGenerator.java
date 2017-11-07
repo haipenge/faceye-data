@@ -16,7 +16,7 @@ import com.faceye.component.data.kafka.KafkaConstants;
 import com.faceye.component.data.spark.stream.domain.RealIDCheckRecord;
 import com.faceye.component.data.spark.stream.domain.SenderAddress;
 import com.faceye.component.data.util.JsonUtil;
-import com.faceye.component.data.util.Logback;
+import com.faceye.component.data.util.LogUtil;
 
 
 /**
@@ -56,7 +56,7 @@ public class CheckRecoderGenerator {
 	}
 	
 	public CheckRecoderGenerator(){
-		Logback.start();
+		LogUtil.start();
 		buildExpOrg();
 	}
 

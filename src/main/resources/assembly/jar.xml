@@ -10,26 +10,20 @@
 	<fileSets>
 		<fileSet>
 			<directory>${project.build.directory}/classes</directory>
-			<!-- <includes> <include>**</include> </includes> -->
+			<!-- 
+			<includes>
+				<include>*.txt</include>
+				<include>*.properties</include>
+			</includes>
+			 -->
 			<excludes>
 				<exclude>**/assembly/*.*</exclude>
-				<exclude>**/db/**/*.*</exclude>
-				<exclude>**/**/**.xml</exclude>
-				<!-- 
-				<exclude>**/**/*.properties</exclude>
-				<exclude>*.properties</exclude>
-				<exclude>*.xml</exclude>
-				 -->
 			</excludes>
 			<outputDirectory>/</outputDirectory>
 		</fileSet>
-		<fileSet>
-			<directory>${project.build.directory}/test-classes</directory>
-			<includes>
-				<include>**</include>
-			</includes>
-			<outputDirectory>/</outputDirectory>
-		</fileSet>
+		<!-- <fileSet> <directory>${project.build.directory}/test-classes</directory> 
+			<includes> <include>**</include> </includes> <outputDirectory>/</outputDirectory> 
+			</fileSet> -->
 		<fileSet>
 			<directory>${project.build.directory}/generated-sources</directory>
 			<includes>

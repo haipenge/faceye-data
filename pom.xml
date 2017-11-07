@@ -37,25 +37,21 @@
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-common</artifactId>
 			<version>${hadoop.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-client</artifactId>
 			<version>${hadoop.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-hdfs</artifactId>
 			<version>${hadoop.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-mapreduce-client-common</artifactId>
 			<version>${hadoop.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -71,13 +67,11 @@
 			<groupId>org.mongodb.mongo-hadoop</groupId>
 			<artifactId>mongo-hadoop-core</artifactId>
 			<version>${mongo-hadoop-core.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hbase</groupId>
 			<artifactId>hbase-client</artifactId>
 			<version>${hbase-client.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hive</groupId>
@@ -94,13 +88,11 @@
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-mllib_2.10</artifactId>
 			<version>${spark.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-streaming_2.10</artifactId>
 			<version>${spark.version}</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -120,7 +112,7 @@
 			<artifactId>jedis</artifactId>
 			<version>${jedis.version}</version>
 		</dependency>
-
+<!-- 
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
@@ -145,6 +137,7 @@
 			<artifactId>logback-access</artifactId>
 			<version>${logback.version}</version>
 		</dependency>
+		 -->
 
 		<!-- <dependency> <groupId>org.apache.storm</groupId> <artifactId>storm-core</artifactId> 
 			<version>${storm.version}</version> <scope>provided</scope> </dependency> 
@@ -162,9 +155,19 @@
 			<systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>
 		</dependency>
 	</dependencies>
+	
 
 	<!-- Package as an executable jar -->
 	<build>
+	  <resources>
+	    <resource>
+	      <directory>src/main/resources</directory>
+	      <includes>
+	        <include>city.txt</include>
+	        <include>*.properties</include>
+	      </includes>
+	    </resource>
+	  </resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -197,9 +200,6 @@
 							<archive>
 								<manifest>
 									<mainClass>com.faceye.component.data.Runner</mainClass>
-									<!-- <mainClass>com.faceye.component.hadoop.service.stock.mapreduce.InitStockRunner</mainClass> -->
-									<!-- <mainClass>com.faceye.component.hadoop.service.mapreduce.example.ExampleRunner</mainClass> -->
-									<!-- <mainClass>com.faceye.component.hadoop.service.mapreduce.example.WordCount</mainClass> -->
 								</manifest>
 							</archive>
 							<descriptorRefs>
