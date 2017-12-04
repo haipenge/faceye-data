@@ -1,9 +1,6 @@
 package com.faceye.component.data.redis;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,41 +10,47 @@ import org.slf4j.LoggerFactory;
 import com.faceye.component.data.conf.Configuration;
 
 import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.JedisShardInfo;
+import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.ShardedJedis;
-import redis.clients.jedis.ShardedJedisPool;
 import redis.clients.util.Pool;
 
 /**
  * Redis集群连接池
+ * 
  * @author songhaipeng
  *
  */
 public class RedisClusterConnectionManager extends AbstractConnectionManager {
 	private Logger logger = LoggerFactory.getLogger(RedisClient.class);
 
-	private static Pool<ShardedJedis> SHARD_JEDIS_POOL = null;
-
 	// exam-> host:port,host:port....
 	private static String HOST = Configuration.get("redis.cluster");
 
+	private static Set<HostAndPort> NODES = null;
+
+	private static JedisCluster JEDIS_CLUSTER = null;
+
 	private RedisClusterConnectionManager() {
-		initShardingJedisPool();
+		init();
+	}
+
+	private void init() {
+		if (NODES == null) {
+			NODES = new HashSet<HostAndPort>();
+			String[] serverArray = StringUtils.split(HOST, ":");
+			for (String ipPort : serverArray) {
+				String[] ipPortPair = ipPort.split(":");
+				NODES.add(new HostAndPort(ipPortPair[0].trim(), Integer.valueOf(ipPortPair[1].trim())));
+			}
+		}
+		if (JEDIS_CLUSTER == null) {
+			JEDIS_CLUSTER = new JedisCluster(NODES, 30000, this.getJedisPoolConfig());
+		}
 	}
 
 	/**
 	 * 获取Reids集群连接池
 	 */
-	private static ThreadLocal<ShardedJedis> shardedLocal = new ThreadLocal<ShardedJedis>() {
-		@Override
-		protected ShardedJedis initialValue() {
-			ShardedJedis jedis = null;
-			if (SHARD_JEDIS_POOL != null) {
-				jedis = SHARD_JEDIS_POOL.getResource();
-			}
-			return jedis;
-		}
-	};
 
 	private static class RedisClusterConnectionManagerHolder {
 		private static RedisClusterConnectionManager INSTANCE = new RedisClusterConnectionManager();
@@ -57,39 +60,43 @@ public class RedisClusterConnectionManager extends AbstractConnectionManager {
 		return RedisClusterConnectionManagerHolder.INSTANCE;
 	}
 
-	/**
-	 * 初始化Redis分片连接池
-	 */
-	private void initShardingJedisPool() {
-		ShardedJedisPool pool = null;
-		List<JedisShardInfo> shards = new ArrayList<JedisShardInfo>();
-		Set<HostAndPort> nodes = new HashSet<>();
-		String[] serverArray = StringUtils.split(HOST, ",");
-		for (String ipPort : serverArray) {
-			String[] ipPortPair = ipPort.split(":");
-			nodes.add(new HostAndPort(ipPortPair[0].trim(), Integer.valueOf(ipPortPair[1].trim())));
-		}
-		Iterator<HostAndPort> it = nodes.iterator();
-		while (it.hasNext()) {
-			HostAndPort host = it.next();
-			JedisShardInfo shard = new JedisShardInfo(host.getHost(), host.getPort(), 30000);
-			shards.add(shard);
-		}
-		SHARD_JEDIS_POOL = new ShardedJedisPool(getJedisPoolConfig(), shards);
-	}
+	public JedisCluster getJedis() {
 
-	public ShardedJedis getJedis() {
-		return shardedLocal.get();
+		return JEDIS_CLUSTER;
 	}
 
 	public void close() {
-		ShardedJedis jedis = shardedLocal.get();
-		if (jedis != null) {
-			jedis.close();
-			shardedLocal.remove();
-		}
-
 	}
 
+	public void set(String key, long seconds, Object value) {
+		JedisCluster jedis = JEDIS_CLUSTER;
+		try {
+			if (jedis != null) {
+				jedis.set(key.getBytes(), ObjectTranscoder.serialize(value), "NX".getBytes(), "EX".getBytes(), seconds);
+			} else {
+				logger.error(">>Jedis is null of key :" + key);
+			}
+		} catch (Exception e) {
+			logger.error(">>Ex:", e);
+		} finally {
+			close();
+		}
+	}
+
+	public Object get(String key) {
+		JedisCluster jedis = JEDIS_CLUSTER;
+		Object obj = null;
+		try {
+			if (jedis != null && jedis.exists(key.getBytes())) {
+				byte[] in = jedis.get(key.getBytes());
+				obj = ObjectTranscoder.deserialize(in);
+			}
+		} catch (Exception e) {
+			logger.error(">>E:", e);
+		} finally {
+			close();
+		}
+		return obj;
+	}
 
 }
