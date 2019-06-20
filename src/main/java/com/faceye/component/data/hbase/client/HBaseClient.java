@@ -33,7 +33,7 @@ public class HBaseClient {
 
 	private HBaseClient() {
 		conf = HBaseConfiguration.create();
-		conf.set("hbase.zookeeper.quorum", HBASE_ZK_QUORUM);
+		conf.set("hbase.zookeeper.quorum", "10.12.12.140");
 		conf.set("hbase.zookeeper.property.clientPort",CLIENT_PORT); 
 	}
 
